@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TWEVE LIVE</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Shaka Player CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/controls.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flex flex-col min-h-screen">
+  <!-- Sticky Player Container -->
+  <div id="videoContainer" class="bg-black sticky top-0 z-50 p-4 hidden">
+    <div id="placeholder" class="text-center text-slate-400 p-4">Chagua channel au sinema ili uanze kutazama</div>
+    <div class="w-full max-w-4xl mx-auto aspect-video rounded-lg shadow-lg overflow-hidden relative">
+      <div id="loading" class="hidden absolute inset-0 flex items-center justify-center">
+        <div class="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      <video id="video" class="w-full h-full"></video>
+      <button id="pipButton" title="Picture-in-Picture">PiP</button>
+    </div>
+  </div>
+
+  <!-- Pages -->
+  <main class="flex flex-col flex-grow pb-20">
+    <!-- LIVE TV PAGE -->
+    <section id="livePage" class="p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold">Live TV Channels</h2>
+        <span class="text-xs text-slate-400">Bofya chaneli yoyote kuonesha player juu</span>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <div class="mb-4 relative">
+        <input
+          id="liveSearch"
+          type="search"
+          placeholder="🔎 Tafuta channel (jina au category)..."
+          aria-label="Tafuta channel kwa jina au kategoria"
+          class="w-full rounded-xl bg-slate-800 border border-slate-600 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          autocomplete="off"
+        />
+        <button id="clearSearch" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white" title="Futa utafutaji">✖</button>
+      </div>
+
+      <div id="channelListLive" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+
+      <!-- Matokeo yasipopatikana -->
+      <p id="noResults" class="hidden text-sm text-slate-300 mt-4">Hakuna channel iliyopatikana kwa utafutaji huo.</p>
+    </section>
+
+    <!-- MOVIES PAGE -->
+    <section id="moviesPage" class="hidden p-4">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-semibold">Movies (Pakua Tu)</h2>
+        <span class="text-xs text-slate-400">Hakuna player mtandaoni – tumia <b>Download</b>.</span>
+      </div>
+      <div class="row-scroll mb-8" id="downloadMoviesRow"></div>
+
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-semibold">Online Movies 🍿</h2>
+        <span class="text-xs text-slate-400">Bofya <b>Play Now</b> kutazama moja kwa moja kwenye player.</span>
+      </div>
+      <div class="row-scroll" id="onlineMoviesRow"></div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button id="btnLive" class="active" aria-pressed="true" aria-label="Tazama Live TV">📺<span>Live TV</span></button>
+    <button id="btnMovies" aria-pressed="false" aria-label="Tazama Sinema">🎬<span>Movies</span></button>
+  </nav>
+
+  <!-- Custom JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

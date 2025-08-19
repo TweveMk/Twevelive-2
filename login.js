@@ -5,9 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Validate phone number format (07xxxxxxxx or +255xxxxxxxxx)
   const validatePhoneNumber = (phone) => {
-    // Remove any non-digit characters except the leading +
     const cleaned = phone.replace(/[^0-9+]/g, '');
-    // Regex for 07xxxxxxxx (10 digits) or +255xxxxxxxxx (12 digits with +255)
     const regex = /^(07[0-9]{8}|\+255[0-9]{9})$/;
     return regex.test(cleaned);
   };
@@ -53,9 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
       showError('Tafadhali ingiza namba ya simu sahihi (mf. 07xxxxxxxx au +255xxxxxxxxx)');
       return;
     }
-    // Normalize and save to localStorage
     const normalizedPhone = normalizePhoneNumber(phoneNumber);
-    localStorage.setItem('user', JSON.stringify({ phoneNumber: normalizedPhone, loggedIn: true, expiry: 0 }));
+    localStorage.setItem('user', JSON.stringify({ phoneNumber: normalizedPhone, loggedIn: true }));
     window.location.href = 'index.html';
   });
 });

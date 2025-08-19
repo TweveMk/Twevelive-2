@@ -36,3 +36,7 @@ button {
 button:hover {
   background: #21c7e5;
 }
+
+.channel-item {
+  transition: background-color 0.3s;
+}

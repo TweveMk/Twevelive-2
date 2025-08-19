@@ -111,7 +111,7 @@ const onlineMovies = [
   }
 ];
 
-// User and payment status
+// Add logos to channels and dynamic URLs
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 const phoneNumber = user.phoneNumber || 'guest';
 const channelsWithLogos = channels.map(ch => ({
@@ -139,14 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const noResults = document.getElementById('noResults');
   const userPhone = document.getElementById('userPhone');
   const logoutButton = document.getElementById('logoutButton');
-  const paymentModal = document.getElementById('paymentModal');
-  const paymentForm = document.getElementById('paymentForm');
-  const payBtn = document.getElementById('payBtn');
-  const phoneInput = document.getElementById('phoneNumber');
-  const messageContainer = document.getElementById('messageContainer');
-  const closeBtn = document.querySelector('.close');
   let currentQuery = "";
-  let pollingInterval = null;
 
   // Display user phone number
   userPhone.textContent = phoneNumber;
@@ -156,279 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     localStorage.removeItem('user');
     window.location.href = 'login.html';
   });
-
-  // Payment modal functions
-  function showModal() {
-    paymentModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    phoneInput.value = phoneNumber;
-    phoneInput.focus();
-  }
-
-  function hideModal() {
-    paymentModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    resetForm();
-  }
-
-  function resetForm() {
-    paymentForm.reset();
-    phoneInput.value = phoneNumber;
-    setPayButtonState(false);
-    clearMessages();
-    clearInterval(pollingInterval);
-  }
-
-  closeBtn.addEventListener('click', hideModal);
-  window.addEventListener('click', (event) => {
-    if (event.target === paymentModal) {
-      hideModal();
-    }
-  });
-
-  // Phone number formatting
-  phoneInput.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 10) value = value.slice(0, 10);
-    if (value.length > 0 && !value.startsWith('0')) value = '0' + value.slice(0, 9);
-    e.target.value = value;
-  });
-
-  // Payment handling
-  paymentForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const phoneNumber = phoneInput.value.trim();
-    if (!validatePhoneNumber(phoneNumber)) {
-      showMessage('Tafadhali ingiza namba ya simu sahihi (mf. 06XXXXXXXX)', 'error');
-      return;
-    }
-    setPayButtonState(true);
-    clearMessages();
-    try {
-      const formData = new FormData();
-      formData.append('action', 'pay');
-      formData.append('phoneNumber', phoneNumber);
-      formData.append('amount', '2000');
-      const response = await fetch('https://your-server.com/payment.php', {
-        method: 'POST',
-        body: formData
-      });
-      const result = await response.json();
-      if (result.success) {
-        showMessage(result.message, 'success');
-        showPaymentWaiting(result.order_id);
-        startPaymentPolling(result.order_id);
-      } else {
-        showMessage(result.message || 'Malipo yameshindwa. Jaribu tena.', 'error');
-        setPayButtonState(false);
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      showMessage('Tatizo la mtandao. Tafadhali angalia muunganisho wako.', 'error');
-      setPayButtonState(false);
-    }
-  });
-
-  function validatePhoneNumber(phoneNumber) {
-    const phoneRegex = /^0[67][0-9]{8}$/;
-    return phoneRegex.test(phoneNumber);
-  }
-
-  function setPayButtonState(loading) {
-    const btnText = payBtn.querySelector('.btn-text');
-    const spinner = payBtn.querySelector('.loading-spinner');
-    if (loading) {
-      payBtn.disabled = true;
-      btnText.style.display = 'none';
-      spinner.style.display = 'block';
-    } else {
-      payBtn.disabled = false;
-      btnText.style.display = 'block';
-      spinner.style.display = 'none';
-    }
-  }
-
-  function showMessage(text, type = 'info') {
-    const message = document.createElement('div');
-    message.className = `message ${type}`;
-    message.textContent = text;
-    messageContainer.appendChild(message);
-    setTimeout(() => {
-      if (message.parentNode) {
-        message.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => message.remove(), 300);
-      }
-    }, 5000);
-  }
-
-  function clearMessages() {
-    messageContainer.innerHTML = '';
-  }
-
-  function showPaymentWaiting(orderId) {
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = `
-      <div style="text-align: center; padding: 40px;">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <div class="waiting-spinner"></div>
-        <h2 style="color: #22d3ee; margin: 20px 0;">Endelea Kulipia...</h2>
-        <p style="color: #cbd5e1; margin-bottom: 20px;">Tafadhali kamilisha malipo kwa simu yako</p>
-        <div class="waiting-steps" style="margin: 30px 0; text-align: left; max-width: 300px; margin: 30px auto;">
-          <div class="step">📱 Angalia simu yako kwa USSD prompt</div>
-          <div class="step">💳 Ingiza PIN yako kukamilisha malipo</div>
-          <div class="step">⏳ Inasubiri uthibitisho...</div>
-        </div>
-        <button onclick="cancelPayment()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px;">
-          Ghairi
-        </button>
-      </div>
-    `;
-  }
-
-  function showPaymentSuccess(orderId) {
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = `
-      <div style="text-align: center; padding: 40px;">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <div style="width: 80px; height: 80px; background: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <span style="color: white; font-size: 40px;">✓</span>
-        </div>
-        <h2 style="color: #28a745; margin-bottom: 15px;">Malipo Yamekamilika!</h2>
-        <p style="color: #cbd5e1;">Umejiunga na TWEVE LIVE. Tazama sasa!</p>
-        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Order ID: ${orderId}</p>
-        <button onclick="window.location.reload()" style="background: #22d3ee; color: black; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer;">
-          Tazama Sasa
-        </button>
-      </div>
-    `;
-  }
-
-  function showPaymentFailed() {
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = `
-      <div style="text-align: center; padding: 40px;">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <div style="width: 80px; height: 80px; background: #dc3545; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <span style="color: white; font-size: 40px;">✗</span>
-        </div>
-        <h2 style="color: #dc3545; margin-bottom: 15px;">Malipo Yameshindwa</h2>
-        <p style="color: #cbd5e1; margin-bottom: 20px;">Malipo yako hayakupokelewa.</p>
-        <button onclick="resetPaymentForm()" style="background: #22d3ee; color: black; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer;">
-          Jaribu Tena
-        </button>
-      </div>
-    `;
-  }
-
-  function showPaymentTimeout(orderId) {
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = `
-      <div style="text-align: center; padding: 40px;">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <div style="width: 80px; height: 80px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <span style="color: white; font-size: 40px;">⏰</span>
-        </div>
-        <h2 style="color: #ffc107; margin-bottom: 15px;">Muda wa Malipo Umeisha</h2>
-        <p style="color: #cbd5e1; margin-bottom: 20px;">Bado tunasubiri uthibitisho wa malipo.</p>
-        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Order ID: ${orderId}</p>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-          <button onclick="continuePolling('${orderId}')" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            Endelea Kusubiri
-          </button>
-          <button onclick="resetPaymentForm()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            Anza Upya
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  function continuePolling(orderId) {
-    showPaymentWaiting(orderId);
-    startPaymentPolling(orderId);
-  }
-
-  function cancelPayment() {
-    clearInterval(pollingInterval);
-    window.location.reload();
-  }
-
-  function resetPaymentForm() {
-    clearInterval(pollingInterval);
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.innerHTML = `
-      <span class="close">&times;</span>
-      <div class="modal-header">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <h2>Lipia TZS 2,000 Ili Kuendelea</h2>
-        <p>Tazama channel zote na sinema bila kikomo!</p>
-      </div>
-      <form id="paymentForm" class="payment-form">
-        <div class="form-group">
-          <label for="phoneNumber">Namba ya Simu yenye Hela</label>
-          <div class="phone-input">
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              placeholder="Jaza namba ya simu (mf. 06XXXXXXXX)"
-              pattern="^0[67][0-9]{8}$"
-              minlength="10"
-              maxlength="10"
-              inputmode="numeric"
-              value="${phoneNumber}"
-              required
-            >
-          </div>
-          <small class="input-help">Ingiza namba ya simu ya mtandao unaotumia</small>
-        </div>
-        <div class="amount-info">
-          <div class="amount-row">
-            <span>TWEVE LIVE</span>
-            <span class="amount">TZS 2,000</span>
-          </div>
-        </div>
-        <button type="submit" class="pay-btn" id="payBtn">
-          <span class="btn-text">Lipia Sasa</span>
-          <div class="loading-spinner" style="display: none;"></div>
-        </button>
-      </form>
-    `;
-    const newCloseBtn = document.querySelector('.close');
-    newCloseBtn.addEventListener('click', hideModal);
-    const newPaymentForm = document.getElementById('paymentForm');
-    newPaymentForm.addEventListener('submit', paymentForm.addEventListener);
-  }
-
-  function startPaymentPolling(orderId) {
-    let pollCount = 0;
-    const maxPolls = 60; // 5 minutes (5 seconds × 60)
-    pollingInterval = setInterval(async () => {
-      pollCount++;
-      try {
-        const response = await fetch(`https://your-server.com/check_status.php?order_id=${orderId}&format=json`);
-        const result = await response.json();
-        if (result.status === 'success' && result.payment_status === 'COMPLETED') {
-          clearInterval(pollingInterval);
-          localStorage.setItem('user', JSON.stringify({ ...user, paid: true, orderId }));
-          showPaymentSuccess(orderId);
-          setTimeout(() => window.location.reload(), 2000);
-        } else if (result.status === 'success' && result.payment_status === 'FAILED') {
-          clearInterval(pollingInterval);
-          showPaymentFailed();
-        } else if (pollCount >= maxPolls) {
-          clearInterval(pollingInterval);
-          showPaymentTimeout(orderId);
-        }
-      } catch (error) {
-        console.error('Polling error:', error);
-        if (pollCount >= maxPolls) {
-          clearInterval(pollingInterval);
-          showPaymentTimeout(orderId);
-        }
-      }
-    }, 5000);
-  }
 
   // Check Picture-in-Picture support
   if (!document.pictureInPictureEnabled) {
@@ -466,18 +186,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   async function loadMedia(media) {
-    if (!user.paid) {
-      showModal();
-      return;
-    }
     const placeholder = document.getElementById('placeholder');
     const loading = document.getElementById('loading');
     const errorMessage = document.createElement('div');
     errorMessage.className = 'text-red-500 text-center p-4';
+
     placeholder.classList.add('hidden');
     loading.classList.remove('hidden');
     videoContainer.classList.remove('hidden');
     videoContainer.classList.add('active');
+
     try {
       await player.attach(videoElement);
       const clearKeys = {};
@@ -495,9 +213,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn(`No DRM key for ${media.name}. Playing without DRM.`);
         player.configure({ drm: {} });
       }
+
       player.configure({
-        drm: { clearKeys: clearKeys }
+        drm: {
+          clearKeys: clearKeys
+        }
       });
+
       await player.load(media.src);
       videoElement.play().catch(error => console.warn("Autoplay failed: User interaction needed", error));
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -513,17 +235,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   function populateLiveChannels(query = "") {
     const q = query.trim().toLowerCase();
     channelListElement.innerHTML = "";
+
     const filtered = channelsWithLogos.filter(ch => {
       const name = ch.name?.toLowerCase() || "";
       const cat = (ch.category || "").toLowerCase();
       return name.includes(q) || cat.includes(q);
     });
+
     if (filtered.length === 0) {
       noResults.classList.remove('hidden');
       return;
     } else {
       noResults.classList.add('hidden');
     }
+
     filtered.forEach((ch) => {
       const div = document.createElement('div');
       div.className = 'channel bg-gray-700 rounded-xl p-3 cursor-pointer text-center shadow-md hover:shadow-xl transition';
@@ -559,12 +284,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         </div>
       `;
-      card.querySelector('a').addEventListener('click', (e) => {
-        if (!user.paid) {
-          e.preventDefault();
-          showModal();
-        }
-      });
       row.appendChild(card);
     });
   }
@@ -598,12 +317,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const live = document.getElementById("livePage");
     const moviesPage = document.getElementById("moviesPage");
     const playerBox = document.getElementById("videoContainer");
+
     live.classList.add("hidden");
     moviesPage.classList.add("hidden");
     btnLive.classList.remove("active");
     btnMovies.classList.remove("active");
     btnLive.setAttribute('aria-pressed', 'false');
     btnMovies.setAttribute('aria-pressed', 'false');
+
     if (page === "live") {
       live.classList.remove("hidden");
       playerBox.classList.add("hidden");

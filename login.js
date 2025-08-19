@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Validate phone number format (e.g., +255 followed by 9 digits)
   const validatePhoneNumber = (phone) => {
-    const regex = /^\+255[67]\d{8}$/;
+    const regex = /^\255[67]\d{8}$/;
     return regex.test(phone);
   };
 
@@ -26,12 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const phoneNumber = phoneNumberInput.value.trim();
     clearError();
+
     if (!validatePhoneNumber(phoneNumber)) {
       showError('Tafadhali ingiza namba ya simu sahihi (mf. +255712345678)');
       return;
     }
-    // Save login details with initial payment status
-    localStorage.setItem('user', JSON.stringify({ phoneNumber, loggedIn: true, paid: false }));
+
+    // Save login details
+    localStorage.setItem('user', JSON.stringify({ phoneNumber, loggedIn: true }));
     window.location.href = 'index.html';
   });
 });

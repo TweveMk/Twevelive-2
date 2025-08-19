@@ -69,50 +69,6 @@
     </section>
   </main>
 
-  <!-- Payment Modal -->
-  <div id="paymentModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div class="modal-header">
-        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="mx-auto mb-4 h-12">
-        <h2>Lipia TZS 2,000 Ili Kuendelea</h2>
-        <p>Tazama channel zote na sinema bila kikomo!</p>
-      </div>
-      <form id="paymentForm" class="payment-form">
-        <div class="form-group">
-          <label for="phoneNumber">Namba ya Simu yenye Hela</label>
-          <div class="phone-input">
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              placeholder="Jaza namba ya simu (mf. 06XXXXXXXX)"
-              pattern="^0[67][0-9]{8}$"
-              minlength="10"
-              maxlength="10"
-              inputmode="numeric"
-              required
-            >
-          </div>
-          <small class="input-help">Ingiza namba ya simu ya mtandao unaotumia</small>
-        </div>
-        <div class="amount-info">
-          <div class="amount-row">
-            <span>TWEVE LIVE</span>
-            <span class="amount">TZS 2,000</span>
-          </div>
-        </div>
-        <button type="submit" class="pay-btn" id="payBtn">
-          <span class="btn-text">Lipia Sasa</span>
-          <div class="loading-spinner" style="display: none;"></div>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Message Container -->
-  <div id="messageContainer" class="message-container"></div>
-
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <button id="btnLive" class="active" aria-pressed="true" aria-label="Tazama Live TV">📺<span>Live TV</span></button>

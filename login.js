@@ -26,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const phoneNumber = phoneNumberInput.value.trim();
     clearError();
-
     if (!validatePhoneNumber(phoneNumber)) {
       showError('Tafadhali ingiza namba ya simu sahihi (mf. +255712345678)');
       return;
     }
-
-    // Save login details
-    localStorage.setItem('user', JSON.stringify({ phoneNumber, loggedIn: true }));
+    // Save login details with initial payment status
+    localStorage.setItem('user', JSON.stringify({ phoneNumber, loggedIn: true, paid: false }));
     window.location.href = 'index.html';
   });
 });

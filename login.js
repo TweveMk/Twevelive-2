@@ -3,34 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const phoneNumberInput = document.getElementById('phoneNumber');
   const errorMessage = document.getElementById('errorMessage');
 
-  // Validate phone number format (07xxxxxxxx or +255xxxxxxxxx)
+  // Validate phone number format (e.g., +255 followed by 9 digits)
   const validatePhoneNumber = (phone) => {
-    // Remove any non-digit characters except the leading +
-    const cleaned = phone.replace(/[^0-9+]/g, '');
-    // Regex for 07xxxxxxxx (10 digits) or +255xxxxxxxxx (12 digits with +255)
-    const regex = /^(07[0-9]{8}|\+255[0-9]{9})$/;
-    return regex.test(cleaned);
+    const regex = /^\+255[67]\d{8}$/;
+    return regex.test(phone);
   };
-
-  // Normalize phone number to +255xxxxxxxxx format
-  const normalizePhoneNumber = (phone) => {
-    let cleaned = phone.replace(/[^0-9+]/g, '');
-    if (cleaned.startsWith('07')) {
-      cleaned = '+255' + cleaned.slice(1);
-    }
-    return cleaned;
-  };
-
-  // Format phone number as user types
-  phoneNumberInput.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/[^0-9+]/g, '');
-    if (value.startsWith('+255')) {
-      if (value.length > 13) value = value.slice(0, 13); // Limit to +255xxxxxxxxx
-    } else {
-      if (value.length > 10) value = value.slice(0, 10); // Limit to 07xxxxxxxx
-    }
-    e.target.value = value;
-  });
 
   // Show error message
   const showError = (message) => {
@@ -49,13 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const phoneNumber = phoneNumberInput.value.trim();
     clearError();
+
     if (!validatePhoneNumber(phoneNumber)) {
-      showError('Tafadhali ingiza namba ya simu sahihi (mf. 07xxxxxxxx au +255xxxxxxxxx)');
+      showError('Tafadhali ingiza namba ya simu sahihi (mf. +255712345678)');
       return;
     }
-    // Normalize and save to localStorage
-    const normalizedPhone = normalizePhoneNumber(phoneNumber);
-    localStorage.setItem('user', JSON.stringify({ phoneNumber: normalizedPhone, loggedIn: true, expiry: 0 }));
+
+    // Save login details
+    localStorage.setItem('user', JSON.stringify({ phoneNumber, loggedIn: true }));
     window.location.href = 'index.html';
   });
 });

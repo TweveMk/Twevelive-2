@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TWEVE LIVE - Ingia</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingia - TWEVE LIVE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen bg-[#0f172a] text-white font-sans">
-  <div class="w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-xl transform transition-all hover:shadow-cyan-500/50">
-    <h1 class="text-3xl font-bold text-center mb-6 text-cyan-400">TWEVE LIVE</h1>
-    <p class="text-center text-sm text-slate-300 mb-8">Ingia kwa namba ya simu ili ufurahie TV na sinema bila malipo!</p>
-    <form id="loginForm" class="space-y-6">
-      <div>
-        <label for="phoneNumber" class="block text-sm font-medium text-slate-300 mb-2">Namba ya Simu</label>
-        <input
-          id="phoneNumber"
-          type="tel"
-          placeholder="Ingiza namba ya simu (mf. +255123456789)"
-          aria-label="Namba ya simu"
-          class="w-full rounded-xl bg-slate-700 border border-slate-600 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
-          required
-        />
+<body class="flex items-center justify-center min-h-screen bg-[#0f172a]">
+  <div class="w-full max-w-md p-6">
+    <div class="bg-[#1e293b] rounded-xl shadow-lg p-8">
+      <div class="flex justify-center mb-6">
+        <img src="https://8upload.com/image/6892195a262d1/a18af4d9d5fa27b3877bd41464115320.png" alt="TWEVE LIVE Logo" class="h-12">
       </div>
-      <button
-        type="submit"
-        class="w-full bg-cyan-400 text-black font-semibold py-3 rounded-xl hover:bg-cyan-300 transition transform hover:scale-105"
-      >
-        Ingia Sasa
-      </button>
-    </form>
-    <p id="errorMessage" class="text-red-500 text-sm mt-4 text-center hidden"></p>
+      <h1 class="text-2xl font-bold text-center text-white mb-2">Ingia kwenye TWEVE LIVE</h1>
+      <p class="text-center text-slate-400 mb-6">Tazama channel za moja kwa moja na sinema!</p>
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label for="phoneNumber" class="block text-sm font-medium text-slate-300 mb-2">Namba ya Simu</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Jaza namba (mf. 07xxxxxxxx au +255xxxxxxxxx)"
+            class="w-full rounded-xl bg-slate-700 border border-slate-600 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+            inputmode="numeric"
+            required
+          >
+          <small class="text-xs text-slate-400 mt-2 block">Ingiza namba ya simu ya mtandao unaotumia (mf. 07xxxxxxxx au +255xxxxxxxxx)</small>
+        </div>
+        <div id="errorMessage" class="hidden text-red-500 text-sm text-center"></div>
+        <button
+          type="submit"
+          class="w-full bg-cyan-400 text-black font-semibold py-3 rounded-xl hover:bg-cyan-300 transition"
+        >
+          Ingia Sasa
+        </button>
+      </form>
+    </div>
   </div>
   <script src="login.js"></script>
 </body>

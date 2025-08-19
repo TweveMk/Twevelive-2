@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Validate phone number format (e.g., +255 followed by 9 digits)
   const validatePhoneNumber = (phone) => {
-    const regex = /^\255[67]\d{8}$/;
+    const regex = /^\+255[67]\d{8}$/;
     return regex.test(phone);
   };
 

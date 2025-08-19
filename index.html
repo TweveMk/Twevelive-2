@@ -4,17 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TWEVE LIVE</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Shaka Player CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.13/controls.css">
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="flex flex-col min-h-screen">
+  <!-- Header with User Info and Logout -->
+  <header class="bg-gray-800 p-4 flex justify-between items-center sticky top-0 z-100 shadow">
+    <h1 class="text-xl font-bold text-cyan-400">TWEVE LIVE</h1>
+    <div class="flex items-center space-x-4">
+      <span id="userPhone" class="text-sm text-slate-300"></span>
+      <button id="logoutButton" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-400 transition">Ondoka</button>
+    </div>
+  </header>
+
   <!-- Sticky Player Container -->
-  <div id="videoContainer" class="bg-black sticky top-0 z-50 p-4 hidden">
+  <div id="videoContainer" class="bg-black sticky top-[64px] z-50 p-4 hidden">
     <div id="placeholder" class="text-center text-slate-400 p-4">Chagua channel au sinema ili uanze kutazama</div>
     <div class="w-full max-w-4xl mx-auto aspect-video rounded-lg shadow-lg overflow-hidden relative">
       <div id="loading" class="hidden absolute inset-0 flex items-center justify-center">
@@ -33,23 +39,18 @@
         <h2 class="text-xl font-semibold">Live TV Channels</h2>
         <span class="text-xs text-slate-400">Bofya chaneli yoyote kuonesha player juu</span>
       </div>
-
-      <!-- SEARCH BAR -->
       <div class="mb-4 relative">
         <input
           id="liveSearch"
           type="search"
           placeholder="🔎 Tafuta channel (jina au category)..."
           aria-label="Tafuta channel kwa jina au kategoria"
-          class="w-full rounded-xl bg-slate-800 border border-slate-600 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          class="w-full rounded-xl bg-slate-700 border border-slate-600 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
           autocomplete="off"
         />
         <button id="clearSearch" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white" title="Futa utafutaji">✖</button>
       </div>
-
       <div id="channelListLive" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
-
-      <!-- Matokeo yasipopatikana -->
       <p id="noResults" class="hidden text-sm text-slate-300 mt-4">Hakuna channel iliyopatikana kwa utafutaji huo.</p>
     </section>
 
@@ -60,7 +61,6 @@
         <span class="text-xs text-slate-400">Hakuna player mtandaoni – tumia <b>Download</b>.</span>
       </div>
       <div class="row-scroll mb-8" id="downloadMoviesRow"></div>
-
       <div class="flex items-center justify-between mb-2">
         <h2 class="text-xl font-semibold">Online Movies 🍿</h2>
         <span class="text-xs text-slate-400">Bofya <b>Play Now</b> kutazama moja kwa moja kwenye player.</span>
@@ -75,7 +75,6 @@
     <button id="btnMovies" aria-pressed="false" aria-label="Tazama Sinema">🎬<span>Movies</span></button>
   </nav>
 
-  <!-- Custom JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>

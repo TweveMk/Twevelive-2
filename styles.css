@@ -23,7 +23,6 @@ body {
   border-radius: 0.75rem;
 }
 
-/* Bottom Navigation Bar */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -61,7 +60,6 @@ body {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Netflix-style movie cards */
 .row-scroll {
   display: grid;
   grid-auto-flow: column;
@@ -69,11 +67,11 @@ body {
   gap: 16px;
   overflow-x: auto;
   padding-bottom: 10px;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .row-scroll::-webkit-scrollbar {
-  display: none; /* Chrome */
+  display: none;
 }
 
 .movie-card {
@@ -110,7 +108,6 @@ body {
   margin-right: 6px;
 }
 
-/* Shaka Player */
 #videoContainer.active {
   display: block;
 }
@@ -144,4 +141,18 @@ body {
 
 #liveSearch:not(:placeholder-shown) ~ #clearSearch {
   display: block;
+}
+
+/* Login Page Styles */
+#loginForm input {
+  transition: all 0.3s ease;
+}
+
+#loginForm input:focus {
+  background-color: #1e293b;
+}
+
+/* Header Styles */
+header {
+  z-index: 100;
 }
